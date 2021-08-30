@@ -43,7 +43,7 @@ output application/json
 		</ee:transform>
 		<error-handler>
 			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="465c4c0a-1875-40a0-9368-07f7010fb8de" >
-				<set-payload value='#["Both failing"]' doc:name="Set Payload" doc:id="4ce627bc-b44e-4247-916a-1d751a530439" />
+				<set-payload value='#["Good day"]' doc:name="Set Payload" doc:id="4ce627bc-b44e-4247-916a-1d751a530439" />
 			</on-error-continue>
 		</error-handler>
 	</flow>
