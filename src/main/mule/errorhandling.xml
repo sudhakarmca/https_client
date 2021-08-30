@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="9cc0de22-54b2-4eb2-8536-87b95818bf1c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="3f148812-bf5c-4650-95c5-a6559f6f29a0" >
+		<db:my-sql-connection host="localhost" port="3306" user="admin" password="root" database="abc" />
+	</db:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="de7ab9c0-20fe-4eea-8528-9738aab36d4d" >
+		<http:request-connection host="myhelloworld-proxy.us-e2.cloudhub.io" />
+	</http:request-config>
+	<flow name="errorhandlingFlow" doc:id="84d28676-82cd-46c3-881d-d775824b0c50" >
+		<http:listener doc:name="Listener" doc:id="6664171d-da15-496e-8535-cc46bd3d7d27" config-ref="HTTP_Listener_config" path="/hai">
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value='#["1"]' doc:name="Set Payload" doc:id="7dd07a4f-52d0-4d35-ac80-a951a37ee085" />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="6adfd105-8938-475e-b7b3-4bfc2651c93a" >
+			<route >
+				<flow-ref doc:name="subErrorFlow" doc:id="83d57d5d-523d-49f6-90af-a5bc5ecbc82a" name="subErrorFlow" />
+			</route>
+			<route >
+				<flow-ref doc:name="errorFlow" doc:id="6a6c5ab3-6607-4ba3-b26b-c342d5f48a2a" name="errorFlow" />
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="34f6143f-aaaf-49ae-98b5-52bedea87ad3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Air India" : payload[0],
+	"Indigo" : payload[1]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="465c4c0a-1875-40a0-9368-07f7010fb8de" >
+				<set-payload value='#["Both failing"]' doc:name="Set Payload" doc:id="4ce627bc-b44e-4247-916a-1d751a530439" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

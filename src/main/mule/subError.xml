@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="57600ac8-d470-4e44-837e-12b1f076aa9a" >
+		<http:request-connection host="mmskk" port="9087" />
+	</http:request-config>
+	<flow name="subErrorFlow" doc:id="22fa3116-34f7-4dc0-9b2a-7d743fb35f86" >
+		<http:request method="GET" doc:name="Request" doc:id="4fa624dc-0814-497c-ba74-8b9ac10091ec" config-ref="HTTP_Request_configuration1" path="sot"/>
+		<set-payload value='#["Air India"]' doc:name="Set Payload" doc:id="b31465e1-d8a1-421c-b9a9-81e150244455" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5829f6d2-a5d8-4ee9-8a7e-f737d8baf69a" type="ANY">
+				<set-payload value='#["Aitr india error"]' doc:name="Set Payload" doc:id="454c7822-a4b5-41d1-a25d-474e43030420" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

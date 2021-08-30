@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="errorFlow" doc:id="6625efa2-d031-4b70-8957-983c34262fbc" >
+		<set-payload value='#["indigo response"]' doc:name="Set Payload" doc:id="8cbf5412-235a-4b1c-82bd-3cdbf9a1a441" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f83211ab-18ce-47be-bd59-2c84ecfd58c5" type="HTTP:TIMEOUT">
+				<set-payload value='#["indigo failing"]' doc:name="Set Payload" doc:id="fc50cb19-b8e3-4bb1-8002-422e8d2ecb94" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
